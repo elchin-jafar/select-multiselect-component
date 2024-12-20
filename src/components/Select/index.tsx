@@ -12,12 +12,21 @@ const Select = ({
   width,
   height,
   borderRadius,
+  closeOnSelect = true,
 }) => {
   const [items, setItems] = useState(options);
 
   function itemToString(item: any) {
     return item ? item.label : "";
   }
+
+  const getItemsFilter = (inputValue) => {
+    const lowerCased = inputValue.toLowerCase();
+
+    return function itemsFilter(item) {
+      return !inputValue || item.label.toLowerCase().includes(lowerCased);
+    };
+  };
 
   const {
     isOpen,
@@ -31,14 +40,29 @@ const Select = ({
   } = useCombobox({
     items: items,
     itemToString,
+
     onInputValueChange({ inputValue }) {
-      console.log(inputValue);
-
-      setItems((prev) => {
-        if (inputValue === "") return options;
-
-        return prev.filter((item) => item?.label.toLowerCase().includes(inputValue.toLowerCase()));
-      });
+      setItems(options.filter(getItemsFilter(inputValue)));
+    },
+    onSelectedItemChange() {
+      setItems(options);
+    },
+    stateReducer: (state, actionAndChanges) => {
+      const { changes, type } = actionAndChanges;
+      switch (type) {
+        case useCombobox.stateChangeTypes.ItemClick:
+          setItems(options);
+          return {
+            ...changes,
+            isOpen: !closeOnSelect,
+            highlightedIndex: state.highlightedIndex,
+          };
+        case useCombobox.stateChangeTypes.InputClick:
+          setItems(options);
+          return changes;
+        default:
+          return changes;
+      }
     },
   });
 

@@ -20,6 +20,7 @@ function App() {
         width='320px'
         // height='80px'
         // borderRadius={12}
+        closeOnSelect={false}
         options={options}
       />
     </>
