@@ -1,5 +1,7 @@
 import Select from "@/components/Select";
 import { Option } from "./components/Select/types";
+import MultiSelect from "./components/MultiSelect";
+import { Flex } from "@chakra-ui/react";
 
 const options = [
   { label: "React", value: "react" },
@@ -16,9 +18,10 @@ const handleDisable = (option: Option) => option.isDisabled!;
 
 function App() {
   return (
-    <>
+    <Flex justifyContent='space-around'>
       <Select options={options} colorScheme='blue' disableOption={handleDisable} />
-    </>
+      <MultiSelect options={options} />
+    </Flex>
   );
 }
 

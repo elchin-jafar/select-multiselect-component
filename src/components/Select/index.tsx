@@ -72,33 +72,33 @@ const Select: FC<SelectProp> = ({
       <Text as='label' {...getLabelProps()}>
         Select
       </Text>
-      <Flex>
-        <InputGroup
-          width={width}
-          endElement={
-            <Image
-              transform={isOpen ? "rotate(180deg)" : undefined}
-              transition='transform 0.2s'
-              src={ChevronDownIcon}
-              {...getToggleButtonProps()}
-            />
-          }
-        >
-          <Input
-            height={height}
-            borderRadius={borderRadius}
-            placeholder={placeholder}
-            {...getInputProps()}
-            borderColor={`${colorScheme}.500`}
-            _focus={{ outline: "none" }}
-          ></Input>
-        </InputGroup>
-      </Flex>
+      <InputGroup
+        width={width}
+        endElement={
+          <Image
+            transform={isOpen ? "rotate(180deg)" : undefined}
+            transition='transform 0.2s'
+            src={ChevronDownIcon}
+            {...getToggleButtonProps()}
+          />
+        }
+      >
+        <Input
+          height={height}
+          borderRadius={borderRadius}
+          placeholder={placeholder}
+          {...getInputProps()}
+          borderColor={`${colorScheme}.500`}
+          _focus={{ outline: "none" }}
+        ></Input>
+      </InputGroup>
 
       <List.Root
         {...getMenuProps()}
         position='absolute'
         minWidth={170}
+        maxHeight={240}
+        overflowY='scroll'
         width={width}
         shadow='lg'
         outline={"none"}
@@ -128,7 +128,6 @@ const Select: FC<SelectProp> = ({
                     }
                     opacity={isDisabled ? 0.6 : 1}
                     pointerEvents={isDisabled ? "none" : "auto"}
-                    fontWeight={selectedItem === item ? "bold" : undefined}
                   >
                     {item?.label}
                   </List.Item>
