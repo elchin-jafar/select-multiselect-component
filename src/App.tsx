@@ -1,17 +1,20 @@
 import Select from "@/components/Select";
-import { useState } from "react";
+
+const options = [
+  { label: "React", value: "react" },
+  { label: "Vue", value: "vue" },
+  { label: "Angular", value: "angular" },
+  { label: "Svelte", value: "svelte" },
+  { label: "Next.js", value: "nextjs", isDisabled: true },
+  { label: "Nuxt.js", value: "nuxtjs" },
+  { label: "Gatsby", value: "gatsby" },
+  { label: "Remix", value: "remix" },
+];
 
 function App() {
-  const [inputValue, setValue] = useState("");
   return (
     <>
-      <Select
-        colorScheme='blue'
-        width='220px'
-        borderRadius='1px'
-        value={inputValue}
-        onChange={setValue}
-      />
+      <Select colorScheme='blue' width='220px' borderRadius='1px' options={options} />
     </>
   );
 }

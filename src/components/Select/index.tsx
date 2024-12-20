@@ -1,96 +1,66 @@
-import {
-  Input,
-  List,
-  ListItem,
-  PopoverArrow,
-  PopoverBody,
-  PopoverContent,
-  PopoverRoot,
-  PopoverTrigger,
-  useDisclosure,
-  useToken,
-} from "@chakra-ui/react";
+import ChevronDownIcon from "@/assets/chevron-down.svg";
+import { Box, Flex, Input, List, Text } from "@chakra-ui/react";
 import { useCombobox } from "downshift";
-import "./style.css";
+import { useState } from "react";
+import InputGroup from "../InputGroup";
 
-const options = ["test", "test1", "option1"];
+const Select = ({ options }) => {
+  const [items, setItems] = useState(options);
 
-const Select = ({
-  colorScheme = "gray",
-  placeholder,
-  width,
-  height,
-  borderRadius,
-  value,
-  onChange,
-  closeOnSelect = true,
-}) => {
+  function itemToString(item: any) {
+    return item ? item.label : "";
+  }
+
   const {
-    inputValue,
+    isOpen,
+    highlightedIndex,
     selectedItem,
-    isOpen: isComboboxOpen,
+    getInputProps,
     getToggleButtonProps,
     getLabelProps,
     getMenuProps,
-    highlightedIndex,
     getItemProps,
-    getInputProps,
   } = useCombobox({
-    items: options,
-    itemToString(item) {
-      return item ? item : "";
+    items: items,
+    itemToString,
+    onInputValueChange({ inputValue }) {
+      console.log(inputValue);
+
+      setItems((prev) => {
+        console.log("prev", prev);
+        if (inputValue === "") return options;
+
+        return prev.filter((item) => item?.value.toLowerCase().includes(inputValue.toLowerCase()));
+      });
     },
-    onSelectedItemChange: ({ selectedItem }) => {
-      onChange(selectedItem);
-      if (closeOnSelect) {
-        onClose();
-      }
-    },
-    onIsOpenChange: ({ isOpen: newIsOpen }) => {
-      if (newIsOpen) {
-        onOpen();
-      } else {
-        onClose();
-      }
-    },
-    // selectedItem: value,
   });
-  const { open, onOpen, onClose } = useDisclosure();
-
-  // const [bg] = useToken("colors", [`${colorScheme}.800`]);
-  const [borderColor] = useToken("colors", [`${colorScheme}.200`]);
-  const [hover] = useToken("colors", [`${colorScheme}.100`]);
-  // const [selected] = useToken("colors", [`${colorScheme}.500`]);
-
-  console.log("isOpen", open);
 
   return (
-    <PopoverRoot open={open}>
-      <PopoverTrigger>
-        <Input
-          {...getInputProps(onChange)}
-          borderColor={borderColor}
-          placeholder={placeholder}
-          width={width}
-          height={height}
-          borderRadius={borderRadius}
-          // value={value ? value : inputValue}
-        />
-      </PopoverTrigger>
-      <PopoverContent width={width}>
-        <PopoverArrow />
-        <PopoverBody>
-          <List.Root {...getMenuProps()}>
-            {open &&
-              options.map((item, index) => (
-                <ListItem _hover={{ backgroundColor: hover }} {...getItemProps({ item, index })}>
-                  {item}
-                </ListItem>
-              ))}
-          </List.Root>
-        </PopoverBody>
-      </PopoverContent>
-    </PopoverRoot>
+    <Box>
+      <Text as='label' {...getLabelProps()}>
+        Select
+      </Text>
+      <Flex>
+        <InputGroup flex='1' endElement={<img src={ChevronDownIcon} {...getToggleButtonProps()} />}>
+          <Input placeholder='options' {...getInputProps()}></Input>
+        </InputGroup>
+      </Flex>
+
+      <List.Root {...getMenuProps()} position='absolute'>
+        {isOpen
+          ? items.map((item, index) => (
+              <List.Item
+                {...getItemProps({ item, index })}
+                key={item?.value}
+                bgColor={index === highlightedIndex ? "lightblue" : undefined}
+                fontWeight={selectedItem === item ? "bold" : undefined}
+              >
+                {item?.label}
+              </List.Item>
+            ))
+          : null}
+      </List.Root>
+    </Box>
   );
 };
 
