@@ -41,12 +41,10 @@ const Select: FC<SelectProp> = ({
   } = useCombobox<Option>({
     items: items,
     itemToString,
+    isItemDisabled: disableOption,
 
     onInputValueChange({ inputValue }) {
       setItems(options.filter(getItemsFilter(inputValue)));
-    },
-    onSelectedItemChange() {
-      setItems(options);
     },
     stateReducer: (state, actionAndChanges) => {
       const { changes, type } = actionAndChanges;
@@ -59,6 +57,8 @@ const Select: FC<SelectProp> = ({
             highlightedIndex: state.highlightedIndex,
           };
         case useCombobox.stateChangeTypes.InputClick:
+        case useCombobox.stateChangeTypes.InputKeyDownArrowUp:
+        case useCombobox.stateChangeTypes.InputKeyDownArrowDown:
           setItems(options);
           return changes;
         default:
