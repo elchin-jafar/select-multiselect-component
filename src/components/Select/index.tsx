@@ -1,29 +1,30 @@
 import ChevronDownIcon from "@/assets/chevron-down.svg";
 import { Box, Flex, Image, Input, List, Text } from "@chakra-ui/react";
 import { useCombobox } from "downshift";
-import { useState } from "react";
+import { FC, useState } from "react";
 import InputGroup from "../InputGroup";
-import "./style.css";
+import { Option, SelectProp } from "./types";
 
-const Select = ({
+const Select: FC<SelectProp> = ({
   options,
   colorScheme = "gray",
   placeholder = "Best Combobox..",
-  width,
+  width = 300,
   height,
-  borderRadius,
+  borderRadius = 5,
   closeOnSelect = true,
+  disableOption = () => false,
 }) => {
   const [items, setItems] = useState(options);
 
-  function itemToString(item: any) {
+  function itemToString(item: Option | null) {
     return item ? item.label : "";
   }
 
-  const getItemsFilter = (inputValue) => {
+  const getItemsFilter = (inputValue: Option["value"]) => {
     const lowerCased = inputValue.toLowerCase();
 
-    return function itemsFilter(item) {
+    return function itemsFilter(item: Option) {
       return !inputValue || item.label.toLowerCase().includes(lowerCased);
     };
   };
@@ -37,7 +38,7 @@ const Select = ({
     getLabelProps,
     getMenuProps,
     getItemProps,
-  } = useCombobox({
+  } = useCombobox<Option>({
     items: items,
     itemToString,
 
@@ -89,6 +90,7 @@ const Select = ({
             placeholder={placeholder}
             {...getInputProps()}
             borderColor={`${colorScheme}.500`}
+            _focus={{ outline: "none" }}
           ></Input>
         </InputGroup>
       </Flex>
@@ -102,26 +104,37 @@ const Select = ({
         outline={"none"}
       >
         {isOpen
-          ? items.map((item, index) => (
-              <List.Item
-                {...getItemProps({ item, index })}
-                key={item?.value}
-                listStyle='none'
-                px={4}
-                py={2}
-                transition='background 0.4s'
-                bgColor={
-                  selectedItem === item
-                    ? `${colorScheme}.300`
-                    : index === highlightedIndex
-                      ? `${colorScheme}.100`
-                      : undefined
-                }
-                fontWeight={selectedItem === item ? "bold" : undefined}
-              >
-                {item?.label}
-              </List.Item>
-            ))
+          ? items.map((item, index) => {
+              const isDisabled = disableOption(item);
+              return (
+                <div
+                  key={item?.value}
+                  style={{ cursor: `${isDisabled ? "not-allowed" : "pointer"}` }}
+                >
+                  <List.Item
+                    {...getItemProps({ item, index })}
+                    listStyle='none'
+                    px={4}
+                    py={2}
+                    transition='background 0.4s'
+                    bgColor={
+                      isDisabled
+                        ? "gray.200"
+                        : selectedItem === item
+                          ? `${colorScheme}.300`
+                          : index === highlightedIndex
+                            ? `${colorScheme}.100`
+                            : undefined
+                    }
+                    opacity={isDisabled ? 0.6 : 1}
+                    pointerEvents={isDisabled ? "none" : "auto"}
+                    fontWeight={selectedItem === item ? "bold" : undefined}
+                  >
+                    {item?.label}
+                  </List.Item>
+                </div>
+              );
+            })
           : null}
       </List.Root>
     </Box>

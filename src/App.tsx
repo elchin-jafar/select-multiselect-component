@@ -1,4 +1,5 @@
 import Select from "@/components/Select";
+import { Option } from "./components/Select/types";
 
 const options = [
   { label: "React", value: "react" },
@@ -11,18 +12,12 @@ const options = [
   { label: "Remix", value: "remix" },
 ];
 
+const handleDisable = (option: Option) => option.isDisabled!;
+
 function App() {
   return (
     <>
-      <Select
-        colorScheme='blue'
-        // placeholder='test'
-        width='320px'
-        // height='80px'
-        // borderRadius={12}
-        closeOnSelect={false}
-        options={options}
-      />
+      <Select options={options} colorScheme='blue' disableOption={handleDisable} />
     </>
   );
 }
