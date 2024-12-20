@@ -14,7 +14,14 @@ const options = [
 function App() {
   return (
     <>
-      <Select colorScheme='blue' width='220px' borderRadius='1px' options={options} />
+      <Select
+        colorScheme='blue'
+        // placeholder='test'
+        width='320px'
+        // height='80px'
+        // borderRadius={12}
+        options={options}
+      />
     </>
   );
 }

@@ -10,7 +10,7 @@ interface InputGroupProps extends InputProps {
 
 const InputGroup = ({ startElement, endElement, children, flex, ...rest }: InputGroupProps) => {
   return (
-    <Flex align='center' flex={flex} position='relative' {...rest}>
+    <Flex align='center' minWidth={170} flex={flex} position='relative' {...rest}>
       {startElement && (
         <Box
           position='absolute'

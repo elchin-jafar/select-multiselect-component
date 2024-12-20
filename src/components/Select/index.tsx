@@ -1,10 +1,18 @@
 import ChevronDownIcon from "@/assets/chevron-down.svg";
-import { Box, Flex, Input, List, Text } from "@chakra-ui/react";
+import { Box, Flex, Image, Input, List, Text } from "@chakra-ui/react";
 import { useCombobox } from "downshift";
 import { useState } from "react";
 import InputGroup from "../InputGroup";
+import "./style.css";
 
-const Select = ({ options }) => {
+const Select = ({
+  options,
+  colorScheme = "gray",
+  placeholder = "Best Combobox..",
+  width,
+  height,
+  borderRadius,
+}) => {
   const [items, setItems] = useState(options);
 
   function itemToString(item: any) {
@@ -27,10 +35,9 @@ const Select = ({ options }) => {
       console.log(inputValue);
 
       setItems((prev) => {
-        console.log("prev", prev);
         if (inputValue === "") return options;
 
-        return prev.filter((item) => item?.value.toLowerCase().includes(inputValue.toLowerCase()));
+        return prev.filter((item) => item?.label.toLowerCase().includes(inputValue.toLowerCase()));
       });
     },
   });
@@ -41,18 +48,51 @@ const Select = ({ options }) => {
         Select
       </Text>
       <Flex>
-        <InputGroup flex='1' endElement={<img src={ChevronDownIcon} {...getToggleButtonProps()} />}>
-          <Input placeholder='options' {...getInputProps()}></Input>
+        <InputGroup
+          width={width}
+          endElement={
+            <Image
+              transform={isOpen ? "rotate(180deg)" : undefined}
+              transition='transform 0.2s'
+              src={ChevronDownIcon}
+              {...getToggleButtonProps()}
+            />
+          }
+        >
+          <Input
+            height={height}
+            borderRadius={borderRadius}
+            placeholder={placeholder}
+            {...getInputProps()}
+            borderColor={`${colorScheme}.500`}
+          ></Input>
         </InputGroup>
       </Flex>
 
-      <List.Root {...getMenuProps()} position='absolute'>
+      <List.Root
+        {...getMenuProps()}
+        position='absolute'
+        minWidth={170}
+        width={width}
+        shadow='lg'
+        outline={"none"}
+      >
         {isOpen
           ? items.map((item, index) => (
               <List.Item
                 {...getItemProps({ item, index })}
                 key={item?.value}
-                bgColor={index === highlightedIndex ? "lightblue" : undefined}
+                listStyle='none'
+                px={4}
+                py={2}
+                transition='background 0.4s'
+                bgColor={
+                  selectedItem === item
+                    ? `${colorScheme}.300`
+                    : index === highlightedIndex
+                      ? `${colorScheme}.100`
+                      : undefined
+                }
                 fontWeight={selectedItem === item ? "bold" : undefined}
               >
                 {item?.label}
