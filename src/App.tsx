@@ -30,6 +30,8 @@ function App() {
         // listProps={{ background: "red" }}
         // listItemProps={{ background: "yellow" }}
         getLabel={(option) => `updated ${option.label}`}
+        // height={70}
+        // size='xxl'
       />
       <MultiSelect options={options} />
     </Flex>

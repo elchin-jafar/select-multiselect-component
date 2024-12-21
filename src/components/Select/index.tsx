@@ -1,9 +1,9 @@
 import ChevronDownIcon from "@/assets/chevron-down.svg";
 import { Box, Image, Input, List, Text } from "@chakra-ui/react";
 import { useCombobox } from "downshift";
-import { FC, useState } from "react";
+import { CSSProperties, FC, useState } from "react";
 import InputGroup from "../InputGroup";
-import { Option, SelectProp } from "./types";
+import { Option, SelectProp, Sizes } from "./types";
 
 const placementStyles = {
   bottom: { top: "100%", left: 0 },
@@ -12,12 +12,29 @@ const placementStyles = {
   right: { left: "100%", top: 6 },
 };
 
+const sizeConfig: Record<
+  Sizes,
+  {
+    inputHeight: CSSProperties["height"];
+    fontSize: CSSProperties["fontSize"];
+    padding: CSSProperties["padding"];
+  }
+> = {
+  xs: { inputHeight: "30px", fontSize: "10px", padding: "12px" },
+  sm: { inputHeight: "35px", fontSize: "12px", padding: "14px" },
+  md: { inputHeight: "40px", fontSize: "14px", padding: "16px" },
+  lg: { inputHeight: "45px", fontSize: "16px", padding: "18px" },
+  xl: { inputHeight: "50px", fontSize: "18px", padding: "20px" },
+  xxl: { inputHeight: "55px", fontSize: "20px", padding: "22px" },
+};
+
 const Select: FC<SelectProp> = ({
   options,
   colorScheme = "gray",
   placeholder = "Best Combobox..",
   width = 300,
   height,
+  size = "lg",
   borderRadius = 5,
   closeOnSelect = true,
   hideSelected = false,
@@ -30,6 +47,8 @@ const Select: FC<SelectProp> = ({
   getValue = (option: Option) => option.value,
 }) => {
   const [items, setItems] = useState(options);
+
+  const { fontSize, inputHeight, padding } = sizeConfig[size];
 
   function itemToString(item: Option | null) {
     return item ? item.label : "";
@@ -87,7 +106,7 @@ const Select: FC<SelectProp> = ({
 
   return (
     <Box position='relative'>
-      <Text as='label' {...getLabelProps()}>
+      <Text as='label' {...getLabelProps()} fontSize={fontSize}>
         Select
       </Text>
       <InputGroup
@@ -102,7 +121,9 @@ const Select: FC<SelectProp> = ({
         }
       >
         <Input
-          height={height}
+          height={height ?? inputHeight}
+          fontSize={fontSize}
+          padding={padding}
           borderRadius={borderRadius}
           placeholder={placeholder}
           {...getInputProps()}
@@ -135,8 +156,10 @@ const Select: FC<SelectProp> = ({
                   <List.Item
                     {...getItemProps({ item, index })}
                     listStyle='none'
-                    px={4}
-                    py={2}
+                    fontSize={fontSize}
+                    px={padding}
+                    py={`calc(${padding} / 2)`}
+                    height={inputHeight}
                     transition='background 0.4s'
                     bgColor={
                       isDisabled

@@ -1,6 +1,8 @@
 import { BoxProps, ListItemProps, ListRootProps } from "@chakra-ui/react";
 import { CSSProperties } from "react";
 
+export type Sizes = "xs" | "sm" | "md" | "lg" | "xl" | "xxl";
+
 export interface Option {
   label: string;
   value: string;
@@ -23,4 +25,5 @@ export interface SelectProp {
   listItemProps?: ListItemProps;
   getLabel?: (option: Option) => string;
   getValue?: (option: Option) => string | number;
+  size?: Sizes;
 }
