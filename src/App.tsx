@@ -8,8 +8,8 @@ const options = [
   { label: "Vue", value: "vue" },
   { label: "Angular", value: "angular" },
   { label: "Svelte", value: "svelte" },
-  { label: "Next.js", value: "nextjs", isDisabled: true },
-  { label: "Nuxt.js", value: "nuxtjs" },
+  { label: "Next.js", value: "next.js", isDisabled: true },
+  { label: "Nuxt.js", value: "nuxt.js" },
   { label: "Gatsby", value: "gatsby" },
   { label: "Remix", value: "remix" },
 ];
@@ -33,7 +33,7 @@ function App() {
         // height={70}
         // size='xxl'
       />
-      <MultiSelect options={options} disableSearch />
+      <MultiSelect options={options} disableSearch hideSelected={false} />
     </Flex>
   );
 }

@@ -4,7 +4,11 @@ import { useCombobox, useMultipleSelection } from "downshift";
 import { FC, useCallback, useMemo, useRef, useState } from "react";
 import { MultiSelectProps } from "./types";
 
-const MultiSelect: FC<MultiSelectProps> = ({ options, disableSearch = false }) => {
+const MultiSelect: FC<MultiSelectProps> = ({
+  options,
+  disableSearch = false,
+  hideSelected = true,
+}) => {
   const [inputValue, setInputValue] = useState("");
   const [selectedItems, setSelectedItems] = useState([]);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -14,19 +18,23 @@ const MultiSelect: FC<MultiSelectProps> = ({ options, disableSearch = false }) =
 
   const getFilteredOptions = useCallback(
     (selectedItems, inputValue) => {
-      if (disableSearch) {
-        return options.filter((option) => !selectedItems.includes(option));
-      }
       const lowerCasedInputValue = inputValue.toLowerCase();
 
-      return options.filter(function filterBook(option) {
-        return (
-          !selectedItems.includes(option) &&
-          option.value.toLowerCase().includes(lowerCasedInputValue)
-        );
+      return options.filter((option) => {
+        const isSelected = selectedItems.some((selected) => selected.value === option.value);
+
+        if (hideSelected && isSelected) {
+          return false;
+        }
+
+        if (disableSearch) {
+          return !isSelected || !hideSelected;
+        }
+
+        return option.label.toLowerCase().includes(lowerCasedInputValue);
       });
     },
-    [options, disableSearch],
+    [options, hideSelected, disableSearch],
   );
 
   const items = useMemo(
@@ -58,7 +66,6 @@ const MultiSelect: FC<MultiSelectProps> = ({ options, disableSearch = false }) =
     getItemProps,
     getInputProps,
     highlightedIndex,
-    selectedItem,
   } = useCombobox({
     items,
     itemToString,
@@ -86,7 +93,14 @@ const MultiSelect: FC<MultiSelectProps> = ({ options, disableSearch = false }) =
         case useCombobox.stateChangeTypes.ItemClick:
         case useCombobox.stateChangeTypes.InputBlur:
           if (newSelectedItem) {
-            setSelectedItems([...selectedItems, newSelectedItem]);
+            const isItemSelected = (option) => {
+              return selectedItems.some((selected) => selected.value === option.value);
+            };
+            setSelectedItems((prev: any) =>
+              isItemSelected(newSelectedItem)
+                ? prev.filter((option: any) => option.value !== newSelectedItem.value)
+                : [...prev, newSelectedItem],
+            );
             setInputValue("");
           }
           break;
@@ -95,7 +109,6 @@ const MultiSelect: FC<MultiSelectProps> = ({ options, disableSearch = false }) =
           if (!disableSearch) {
             setInputValue(newInputValue);
           }
-
           break;
         default:
           break;
@@ -153,21 +166,20 @@ const MultiSelect: FC<MultiSelectProps> = ({ options, disableSearch = false }) =
 
       <List.Root position='absolute' maxHeight={240} overflowY='scroll' {...getMenuProps()}>
         {isOpen
-          ? items.map((item, index) => (
-              <List.Item
-                {...getItemProps({ item, index })}
-                key={item.value}
-                bgColor={
-                  selectedItem === item
-                    ? "blue"
-                    : highlightedIndex === index
-                      ? "lightblue"
-                      : undefined
-                }
-              >
-                {item.label}
-              </List.Item>
-            ))
+          ? items.map((item, index) => {
+              const isSelected = selectedItems.some((selected) => selected.value === item.value);
+              return (
+                <List.Item
+                  {...getItemProps({ item, index })}
+                  key={item.value}
+                  bgColor={
+                    isSelected ? "blue" : highlightedIndex === index ? "lightblue" : undefined
+                  }
+                >
+                  {item.label}
+                </List.Item>
+              );
+            })
           : null}
       </List.Root>
     </Box>

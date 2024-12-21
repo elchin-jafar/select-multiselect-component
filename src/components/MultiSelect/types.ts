@@ -7,4 +7,5 @@ export interface Option {
 export interface MultiSelectProps {
   options: Option[];
   disableSearch?: boolean;
+  hideSelected?: boolean;
 }
