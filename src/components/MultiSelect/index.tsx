@@ -1,41 +1,99 @@
 import CloseIcon from "@/assets/close.svg";
 import { Box, Flex, Group, Image, Input, List, Tag, Text, VStack } from "@chakra-ui/react";
 import { useCombobox, useMultipleSelection } from "downshift";
-import { useRef } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 
 const MultiSelect = ({ options }) => {
+  const [inputValue, setInputValue] = useState("");
+  const [selectedItems, setSelectedItems] = useState([]);
   const inputRef = useRef<HTMLInputElement | null>(null);
   function itemToString(item: any | null) {
     return item ? item.label : "";
   }
 
-  function itemToKey(key: any) {
-    return key ? key.value : "";
-  }
-  const {
+  const getFilteredOptions = useCallback(
+    (selectedItems, inputValue) => {
+      const lowerCasedInputValue = inputValue.toLowerCase();
+
+      return options.filter(function filterBook(option) {
+        return (
+          !selectedItems.includes(option) &&
+          option.value.toLowerCase().includes(lowerCasedInputValue)
+        );
+      });
+    },
+    [options],
+  );
+
+  const items = useMemo(
+    () => getFilteredOptions(selectedItems, inputValue),
+    [selectedItems, inputValue, getFilteredOptions],
+  );
+
+  const { getSelectedItemProps, getDropdownProps, removeSelectedItem } = useMultipleSelection({
     selectedItems,
-    getDropdownProps,
-    getSelectedItemProps,
-    addSelectedItem,
-    removeSelectedItem,
-  } = useMultipleSelection({ itemToKey });
-
-  const items = options.filter((option) => selectedItems.indexOf(option) === -1);
+    onStateChange({ selectedItems: newSelectedItems, type }) {
+      switch (type) {
+        case useMultipleSelection.stateChangeTypes.SelectedItemKeyDownBackspace:
+        case useMultipleSelection.stateChangeTypes.SelectedItemKeyDownDelete:
+        case useMultipleSelection.stateChangeTypes.DropdownKeyDownBackspace:
+        case useMultipleSelection.stateChangeTypes.FunctionRemoveSelectedItem:
+          setSelectedItems(newSelectedItems);
+          break;
+        default:
+          break;
+      }
+    },
+  });
 
   const {
+    isOpen,
     getToggleButtonProps,
+    getLabelProps,
     getMenuProps,
     getItemProps,
-    getLabelProps,
-    isOpen,
-    selectedItem,
+    getInputProps,
     highlightedIndex,
+    selectedItem,
   } = useCombobox({
     items,
     itemToString,
+    defaultHighlightedIndex: 0,
     selectedItem: null,
-    onSelectedItemChange({ selectedItem }) {
-      return selectedItem && addSelectedItem(selectedItem);
+    inputValue,
+    stateReducer(state, actionAndChanges) {
+      const { changes, type } = actionAndChanges;
+
+      switch (type) {
+        case useCombobox.stateChangeTypes.InputKeyDownEnter:
+        case useCombobox.stateChangeTypes.ItemClick:
+          return {
+            ...changes,
+            isOpen: true,
+            highlightedIndex: 0,
+          };
+        default:
+          return changes;
+      }
+    },
+    onStateChange({ inputValue: newInputValue, type, selectedItem: newSelectedItem }) {
+      switch (type) {
+        case useCombobox.stateChangeTypes.InputKeyDownEnter:
+        case useCombobox.stateChangeTypes.ItemClick:
+        case useCombobox.stateChangeTypes.InputBlur:
+          if (newSelectedItem) {
+            setSelectedItems([...selectedItems, newSelectedItem]);
+            setInputValue("");
+          }
+          break;
+
+        case useCombobox.stateChangeTypes.InputChange:
+          setInputValue(newInputValue);
+
+          break;
+        default:
+          break;
+      }
     },
   });
 
@@ -55,33 +113,39 @@ const MultiSelect = ({ options }) => {
           position='relative'
           p={2}
           width={400}
-          {...getToggleButtonProps(getDropdownProps({ preventKeyAction: isOpen }))}
+          {...getToggleButtonProps()}
         >
           <Flex wrap='wrap' position='relative' gap={2}>
             {selectedItems.map((option, index) => (
-              <Tag.Root key={option.label}>
+              <Tag.Root
+                key={option.label}
+                {...getSelectedItemProps({ selectedItem: option, index })}
+              >
                 <Tag.Label>{option.label}</Tag.Label>
                 <Tag.EndElement
-                  {...getToggleButtonProps()}
                   cursor='pointer'
                   onClick={(e) => {
                     e.stopPropagation();
-                    console.log(selectedItem);
-                    removeSelectedItem(selectedItem);
+                    removeSelectedItem(option);
                   }}
                 >
                   <Image src={CloseIcon} />
                 </Tag.EndElement>
               </Tag.Root>
             ))}
-            <Input ref={inputRef} border='none' outline='none' />
+            <Input
+              ref={inputRef}
+              border='none'
+              outline='none'
+              {...getInputProps(getDropdownProps({ preventKeyAction: isOpen }))}
+            />
           </Flex>
         </Group>
       </VStack>
 
       <List.Root position='absolute' maxHeight={240} overflowY='scroll' {...getMenuProps()}>
         {isOpen
-          ? options.map((item, index) => (
+          ? items.map((item, index) => (
               <List.Item
                 {...getItemProps({ item, index })}
                 key={item.value}
