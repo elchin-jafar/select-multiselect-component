@@ -1,32 +1,10 @@
 import ChevronDownIcon from "@/assets/chevron-down.svg";
 import { Box, Image, Input, List, Text } from "@chakra-ui/react";
 import { useCombobox } from "downshift";
-import { CSSProperties, FC, useState } from "react";
+import { FC, useState } from "react";
 import InputGroup from "../InputGroup";
-import { Option, SelectProp, Sizes } from "./types";
-
-const placementStyles = {
-  bottom: { top: "100%", left: 0 },
-  top: { bottom: "100%", left: 0 },
-  left: { right: "100%", top: 6 },
-  right: { left: "100%", top: 6 },
-};
-
-const sizeConfig: Record<
-  Sizes,
-  {
-    inputHeight: CSSProperties["height"];
-    fontSize: CSSProperties["fontSize"];
-    padding: CSSProperties["padding"];
-  }
-> = {
-  xs: { inputHeight: "30px", fontSize: "10px", padding: "12px" },
-  sm: { inputHeight: "35px", fontSize: "12px", padding: "14px" },
-  md: { inputHeight: "40px", fontSize: "14px", padding: "16px" },
-  lg: { inputHeight: "45px", fontSize: "16px", padding: "18px" },
-  xl: { inputHeight: "50px", fontSize: "18px", padding: "20px" },
-  xxl: { inputHeight: "55px", fontSize: "20px", padding: "22px" },
-};
+import { Option, SelectProp } from "./types";
+import { placementStyles, sizeConfig } from "./constants";
 
 const Select: FC<SelectProp> = ({
   options,

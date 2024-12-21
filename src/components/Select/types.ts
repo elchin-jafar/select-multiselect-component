@@ -3,6 +3,12 @@ import { CSSProperties } from "react";
 
 export type Sizes = "xs" | "sm" | "md" | "lg" | "xl" | "xxl";
 
+export type SizeConfigValues = {
+  inputHeight: CSSProperties["height"];
+  fontSize: CSSProperties["fontSize"];
+  padding: CSSProperties["padding"];
+};
+
 export interface Option {
   label: string;
   value: string;
