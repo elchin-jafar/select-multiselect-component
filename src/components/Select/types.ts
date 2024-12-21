@@ -1,3 +1,4 @@
+import { BoxProps, ListItemProps, ListRootProps } from "@chakra-ui/react";
 import { CSSProperties } from "react";
 
 export interface Option {
@@ -17,4 +18,7 @@ export interface SelectProp {
   hideSelected?: boolean;
   placement?: "bottom" | "top" | "left" | "right";
   disableOption?: (option: Option) => boolean;
+  popoverProps?: BoxProps;
+  listProps?: ListRootProps;
+  listItemProps?: ListItemProps;
 }

@@ -23,6 +23,9 @@ const Select: FC<SelectProp> = ({
   hideSelected = false,
   placement = "bottom",
   disableOption = () => false,
+  popoverProps = {},
+  listProps = {},
+  listItemProps = {},
 }) => {
   const [items, setItems] = useState(options);
 
@@ -115,6 +118,7 @@ const Select: FC<SelectProp> = ({
         width={width}
         shadow='lg'
         outline={"none"}
+        {...listProps}
         {...placementStyles[placement]}
       >
         {isOpen
@@ -123,6 +127,7 @@ const Select: FC<SelectProp> = ({
               return (
                 <Box
                   key={item?.value}
+                  {...popoverProps}
                   style={{ cursor: `${isDisabled ? "not-allowed" : "pointer"}` }}
                 >
                   <List.Item
@@ -142,6 +147,7 @@ const Select: FC<SelectProp> = ({
                     }
                     opacity={isDisabled ? 0.6 : 1}
                     pointerEvents={isDisabled ? "none" : "auto"}
+                    {...listItemProps}
                   >
                     {item?.label}
                   </List.Item>

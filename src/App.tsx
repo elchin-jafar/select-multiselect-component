@@ -26,6 +26,9 @@ function App() {
         // closeOnSelect={false}
         // placement='bottom'
         disableOption={handleDisable}
+        popoverProps={{ cursor: "pointer" }}
+        // listProps={{ background: "red" }}
+        // listItemProps={{ background: "yellow" }}
       />
       <MultiSelect options={options} />
     </Flex>
