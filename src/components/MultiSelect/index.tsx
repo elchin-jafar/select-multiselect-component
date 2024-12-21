@@ -1,9 +1,10 @@
-import { Box, For, HStack, Image, Input, List, Tag, TagCloseTrigger, Text } from "@chakra-ui/react";
 import CloseIcon from "@/assets/close.svg";
+import { Box, Flex, Group, Image, Input, List, Tag, Text, VStack } from "@chakra-ui/react";
 import { useCombobox, useMultipleSelection } from "downshift";
-import InputGroup from "../InputGroup";
+import { useRef } from "react";
 
 const MultiSelect = ({ options }) => {
+  const inputRef = useRef<HTMLInputElement | null>(null);
   function itemToString(item: any | null) {
     return item ? item.label : "";
   }
@@ -37,36 +38,47 @@ const MultiSelect = ({ options }) => {
       return selectedItem && addSelectedItem(selectedItem);
     },
   });
+
+  const handleFocus = () => {
+    if (!inputRef.current) return;
+    inputRef.current.focus();
+  };
   return (
     <Box>
-      <Text as='label' {...getLabelProps()}>
-        Multi Select
-      </Text>
-      <InputGroup
-        startElement={
-          <HStack gap='4'>
-            <For each={selectedItems}>
-              {(option, index) => (
-                <Tag.Root key={option.value} {...getSelectedItemProps({ index, selectedItem })}>
-                  <Tag.Label>{option.value}</Tag.Label>
-                  <Tag.EndElement>
-                    <TagCloseTrigger
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        removeSelectedItem(selectedItem);
-                      }}
-                    >
-                      <Image src={CloseIcon} />
-                    </TagCloseTrigger>
-                  </Tag.EndElement>
-                </Tag.Root>
-              )}
-            </For>
-          </HStack>
-        }
-      >
-        <Input {...getToggleButtonProps(getDropdownProps({ preventKeyAction: isOpen }))} />
-      </InputGroup>
+      <VStack onClick={handleFocus} alignItems='start'>
+        <Text as='label' {...getLabelProps()}>
+          Multi Select
+        </Text>
+        <Group
+          display='flex'
+          border='1px solid red'
+          position='relative'
+          p={2}
+          width={400}
+          {...getToggleButtonProps(getDropdownProps({ preventKeyAction: isOpen }))}
+        >
+          <Flex wrap='wrap' position='relative' gap={2}>
+            {selectedItems.map((option, index) => (
+              <Tag.Root key={option.label}>
+                <Tag.Label>{option.label}</Tag.Label>
+                <Tag.EndElement
+                  {...getToggleButtonProps()}
+                  cursor='pointer'
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    console.log(selectedItem);
+                    removeSelectedItem(selectedItem);
+                  }}
+                >
+                  <Image src={CloseIcon} />
+                </Tag.EndElement>
+              </Tag.Root>
+            ))}
+            <Input ref={inputRef} border='none' outline='none' />
+          </Flex>
+        </Group>
+      </VStack>
+
       <List.Root position='absolute' maxHeight={240} overflowY='scroll' {...getMenuProps()}>
         {isOpen
           ? options.map((item, index) => (
