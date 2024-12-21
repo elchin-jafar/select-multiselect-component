@@ -157,6 +157,7 @@ const MultiSelect: FC<MultiSelectProps> = ({
                 ref={inputRef}
                 border='none'
                 outline='none'
+                pointerEvents='none'
                 {...getInputProps(getDropdownProps({ preventKeyAction: isOpen }))}
               />
             )}
