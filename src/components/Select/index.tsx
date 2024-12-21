@@ -1,5 +1,5 @@
 import ChevronDownIcon from "@/assets/chevron-down.svg";
-import { Box, Flex, Image, Input, List, Text } from "@chakra-ui/react";
+import { Box, Image, Input, List, Text } from "@chakra-ui/react";
 import { useCombobox } from "downshift";
 import { FC, useState } from "react";
 import InputGroup from "../InputGroup";
