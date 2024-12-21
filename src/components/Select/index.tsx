@@ -26,6 +26,8 @@ const Select: FC<SelectProp> = ({
   popoverProps = {},
   listProps = {},
   listItemProps = {},
+  getLabel = (option: Option) => option.label,
+  getValue = (option: Option) => option.value,
 }) => {
   const [items, setItems] = useState(options);
 
@@ -37,8 +39,8 @@ const Select: FC<SelectProp> = ({
     const lowerCased = inputValue.toLowerCase();
 
     return function itemsFilter(item: Option) {
-      const matchesInput = !inputValue || item.label.toLowerCase().includes(lowerCased);
-      const isHidden = hideSelected && selectedItem && item.value === selectedItem.value;
+      const matchesInput = !inputValue || getLabel(item).toLowerCase().includes(lowerCased);
+      const isHidden = hideSelected && selectedItem && getValue(item) === selectedItem.value;
       return matchesInput && !isHidden;
     };
   };
@@ -126,7 +128,7 @@ const Select: FC<SelectProp> = ({
               const isDisabled = disableOption(item);
               return (
                 <Box
-                  key={item?.value}
+                  key={getValue(item)}
                   {...popoverProps}
                   style={{ cursor: `${isDisabled ? "not-allowed" : "pointer"}` }}
                 >
@@ -149,7 +151,7 @@ const Select: FC<SelectProp> = ({
                     pointerEvents={isDisabled ? "none" : "auto"}
                     {...listItemProps}
                   >
-                    {item?.label}
+                    {getLabel(item)}
                   </List.Item>
                 </Box>
               );

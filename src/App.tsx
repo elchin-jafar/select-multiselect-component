@@ -29,6 +29,7 @@ function App() {
         popoverProps={{ cursor: "pointer" }}
         // listProps={{ background: "red" }}
         // listItemProps={{ background: "yellow" }}
+        getLabel={(option) => `updated ${option.label}`}
       />
       <MultiSelect options={options} />
     </Flex>

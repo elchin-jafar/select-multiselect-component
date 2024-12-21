@@ -21,4 +21,6 @@ export interface SelectProp {
   popoverProps?: BoxProps;
   listProps?: ListRootProps;
   listItemProps?: ListItemProps;
+  getLabel?: (option: Option) => string;
+  getValue?: (option: Option) => string | number;
 }
