@@ -15,5 +15,6 @@ export interface SelectProp {
   borderRadius?: CSSProperties["borderRadius"];
   closeOnSelect?: boolean;
   hideSelected?: boolean;
+  placement?: "bottom" | "top" | "left" | "right";
   disableOption?: (option: Option) => boolean;
 }

@@ -5,6 +5,13 @@ import { FC, useState } from "react";
 import InputGroup from "../InputGroup";
 import { Option, SelectProp } from "./types";
 
+const placementStyles = {
+  bottom: { top: "100%", left: 0 },
+  top: { bottom: "100%", left: 0 },
+  left: { right: "100%", top: 6 },
+  right: { left: "100%", top: 6 },
+};
+
 const Select: FC<SelectProp> = ({
   options,
   colorScheme = "gray",
@@ -14,6 +21,7 @@ const Select: FC<SelectProp> = ({
   borderRadius = 5,
   closeOnSelect = true,
   hideSelected = false,
+  placement = "bottom",
   disableOption = () => false,
 }) => {
   const [items, setItems] = useState(options);
@@ -60,9 +68,11 @@ const Select: FC<SelectProp> = ({
             highlightedIndex: state.highlightedIndex,
           };
         case useCombobox.stateChangeTypes.InputClick:
+          setItems(options.filter(getItemsFilter("")));
+          return changes;
         case useCombobox.stateChangeTypes.InputKeyDownArrowUp:
         case useCombobox.stateChangeTypes.InputKeyDownArrowDown:
-          setItems(options.filter(getItemsFilter("")));
+          setItems(options.filter(getItemsFilter(state.inputValue)));
           return changes;
         default:
           return changes;
@@ -71,7 +81,7 @@ const Select: FC<SelectProp> = ({
   });
 
   return (
-    <Box>
+    <Box position='relative'>
       <Text as='label' {...getLabelProps()}>
         Select
       </Text>
@@ -105,12 +115,13 @@ const Select: FC<SelectProp> = ({
         width={width}
         shadow='lg'
         outline={"none"}
+        {...placementStyles[placement]}
       >
         {isOpen
           ? items.map((item, index) => {
               const isDisabled = disableOption(item);
               return (
-                <div
+                <Box
                   key={item?.value}
                   style={{ cursor: `${isDisabled ? "not-allowed" : "pointer"}` }}
                 >
@@ -134,7 +145,7 @@ const Select: FC<SelectProp> = ({
                   >
                     {item?.label}
                   </List.Item>
-                </div>
+                </Box>
               );
             })
           : null}

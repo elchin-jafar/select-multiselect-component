@@ -18,12 +18,13 @@ const handleDisable = (option: Option) => option.isDisabled!;
 
 function App() {
   return (
-    <Flex justifyContent='space-around'>
+    <Flex justifyContent='space-around' position='relative' top='320px'>
       <Select
         options={options}
         colorScheme='blue'
-        hideSelected
+        // hideSelected
         // closeOnSelect={false}
+        // placement='bottom'
         disableOption={handleDisable}
       />
       <MultiSelect options={options} />
