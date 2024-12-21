@@ -17,4 +17,6 @@ export interface MultiSelectProps {
   popoverProps?: BoxProps;
   listProps?: ListRootProps;
   listItemProps?: ListItemProps;
+  getLabel?: (option: Option) => string;
+  getValue?: (option: Option) => string;
 }

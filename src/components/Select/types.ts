@@ -30,6 +30,6 @@ export interface SelectProp {
   listProps?: ListRootProps;
   listItemProps?: ListItemProps;
   getLabel?: (option: Option) => string;
-  getValue?: (option: Option) => string | number;
+  getValue?: (option: Option) => string;
   size?: Sizes;
 }

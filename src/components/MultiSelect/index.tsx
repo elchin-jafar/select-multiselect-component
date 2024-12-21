@@ -14,12 +14,14 @@ const MultiSelect: FC<MultiSelectProps> = ({
   popoverProps = {},
   listProps = {},
   listItemProps = {},
+  getLabel = (option: Option) => option.label,
+  getValue = (option: Option) => option.value,
 }) => {
   const [inputValue, setInputValue] = useState("");
   const [selectedItems, setSelectedItems] = useState<Option[]>([]);
   const inputRef = useRef<HTMLInputElement | null>(null);
   function itemToString(item: Option | null) {
-    return item ? item.label : "";
+    return item ? getLabel(item) : "";
   }
 
   const getFilteredOptions = useCallback(
@@ -27,7 +29,9 @@ const MultiSelect: FC<MultiSelectProps> = ({
       const lowerCasedInputValue = inputValue.toLowerCase();
 
       return options.filter((option) => {
-        const isSelected = selectedItems.some((selected) => selected.value === option.value);
+        const isSelected = selectedItems.some(
+          (selected) => getValue(selected) === getValue(option),
+        );
 
         if (hideSelected && isSelected) {
           return false;
@@ -37,10 +41,10 @@ const MultiSelect: FC<MultiSelectProps> = ({
           return !isSelected || !hideSelected;
         }
 
-        return option.label.toLowerCase().includes(lowerCasedInputValue);
+        return getValue(option).toLowerCase().includes(lowerCasedInputValue);
       });
     },
-    [options, hideSelected, disableSearch],
+    [options, hideSelected, disableSearch, getValue],
   );
 
   const items = useMemo(
@@ -80,7 +84,7 @@ const MultiSelect: FC<MultiSelectProps> = ({
     defaultHighlightedIndex: 0,
     selectedItem: null,
     inputValue,
-    stateReducer(state, actionAndChanges) {
+    stateReducer(_state, actionAndChanges) {
       const { changes, type } = actionAndChanges;
 
       switch (type) {
@@ -102,11 +106,11 @@ const MultiSelect: FC<MultiSelectProps> = ({
         case useCombobox.stateChangeTypes.InputBlur:
           if (newSelectedItem) {
             const isItemSelected = (option: Option) => {
-              return selectedItems.some((selected) => selected.value === option.value);
+              return selectedItems.some((selected) => getValue(selected) === getValue(option));
             };
             setSelectedItems((prev) =>
               isItemSelected(newSelectedItem)
-                ? prev.filter((option) => option.value !== newSelectedItem.value)
+                ? prev.filter((option) => getValue(option) !== getValue(newSelectedItem))
                 : [...prev, newSelectedItem],
             );
             setInputValue("");
@@ -146,12 +150,12 @@ const MultiSelect: FC<MultiSelectProps> = ({
           <Flex wrap='wrap' position='relative' gapX={2} gapY={0}>
             {selectedItems.map((option, index) => (
               <Tag.Root
-                key={option.label}
+                key={getValue(option)}
                 backgroundColor='gray.100'
                 {...getSelectedItemProps({ selectedItem: option, index })}
               >
                 <Tag.Label fontSize={15} p='3px'>
-                  {option.label}
+                  {getLabel(option)}
                 </Tag.Label>
                 <Tag.EndElement
                   cursor='pointer'
@@ -191,11 +195,13 @@ const MultiSelect: FC<MultiSelectProps> = ({
         >
           {isOpen
             ? items.map((item, index) => {
-                const isSelected = selectedItems.some((selected) => selected.value === item.value);
+                const isSelected = selectedItems.some(
+                  (selected) => getValue(selected) === getValue(item),
+                );
                 return (
                   <List.Item
                     {...getItemProps({ item, index })}
-                    key={item.value}
+                    key={getValue(item)}
                     listStyle='none'
                     px={4}
                     py={2}
@@ -209,7 +215,7 @@ const MultiSelect: FC<MultiSelectProps> = ({
                     }
                     {...listItemProps}
                   >
-                    {item.label}
+                    {getLabel(item)}
                   </List.Item>
                 );
               })
