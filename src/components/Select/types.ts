@@ -14,5 +14,6 @@ export interface SelectProp {
   height?: CSSProperties["height"];
   borderRadius?: CSSProperties["borderRadius"];
   closeOnSelect?: boolean;
+  hideSelected?: boolean;
   disableOption?: (option: Option) => boolean;
 }

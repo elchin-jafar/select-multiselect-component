@@ -13,6 +13,7 @@ const Select: FC<SelectProp> = ({
   height,
   borderRadius = 5,
   closeOnSelect = true,
+  hideSelected = false,
   disableOption = () => false,
 }) => {
   const [items, setItems] = useState(options);
@@ -25,7 +26,9 @@ const Select: FC<SelectProp> = ({
     const lowerCased = inputValue.toLowerCase();
 
     return function itemsFilter(item: Option) {
-      return !inputValue || item.label.toLowerCase().includes(lowerCased);
+      const matchesInput = !inputValue || item.label.toLowerCase().includes(lowerCased);
+      const isHidden = hideSelected && selectedItem && item.value === selectedItem.value;
+      return matchesInput && !isHidden;
     };
   };
 
@@ -50,7 +53,7 @@ const Select: FC<SelectProp> = ({
       const { changes, type } = actionAndChanges;
       switch (type) {
         case useCombobox.stateChangeTypes.ItemClick:
-          setItems(options);
+          setItems(options.filter(getItemsFilter("")));
           return {
             ...changes,
             isOpen: !closeOnSelect,
@@ -59,7 +62,7 @@ const Select: FC<SelectProp> = ({
         case useCombobox.stateChangeTypes.InputClick:
         case useCombobox.stateChangeTypes.InputKeyDownArrowUp:
         case useCombobox.stateChangeTypes.InputKeyDownArrowDown:
-          setItems(options);
+          setItems(options.filter(getItemsFilter("")));
           return changes;
         default:
           return changes;
