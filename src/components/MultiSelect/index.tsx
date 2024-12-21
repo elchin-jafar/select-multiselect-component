@@ -1,9 +1,10 @@
 import CloseIcon from "@/assets/close.svg";
 import { Box, Flex, Group, Image, Input, List, Tag, Text, VStack } from "@chakra-ui/react";
 import { useCombobox, useMultipleSelection } from "downshift";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { FC, useCallback, useMemo, useRef, useState } from "react";
+import { MultiSelectProps } from "./types";
 
-const MultiSelect = ({ options }) => {
+const MultiSelect: FC<MultiSelectProps> = ({ options, disableSearch = false }) => {
   const [inputValue, setInputValue] = useState("");
   const [selectedItems, setSelectedItems] = useState([]);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -13,6 +14,9 @@ const MultiSelect = ({ options }) => {
 
   const getFilteredOptions = useCallback(
     (selectedItems, inputValue) => {
+      if (disableSearch) {
+        return options.filter((option) => !selectedItems.includes(option));
+      }
       const lowerCasedInputValue = inputValue.toLowerCase();
 
       return options.filter(function filterBook(option) {
@@ -22,7 +26,7 @@ const MultiSelect = ({ options }) => {
         );
       });
     },
-    [options],
+    [options, disableSearch],
   );
 
   const items = useMemo(
@@ -88,7 +92,9 @@ const MultiSelect = ({ options }) => {
           break;
 
         case useCombobox.stateChangeTypes.InputChange:
-          setInputValue(newInputValue);
+          if (!disableSearch) {
+            setInputValue(newInputValue);
+          }
 
           break;
         default:
@@ -133,12 +139,14 @@ const MultiSelect = ({ options }) => {
                 </Tag.EndElement>
               </Tag.Root>
             ))}
-            <Input
-              ref={inputRef}
-              border='none'
-              outline='none'
-              {...getInputProps(getDropdownProps({ preventKeyAction: isOpen }))}
-            />
+            {!disableSearch && (
+              <Input
+                ref={inputRef}
+                border='none'
+                outline='none'
+                {...getInputProps(getDropdownProps({ preventKeyAction: isOpen }))}
+              />
+            )}
           </Flex>
         </Group>
       </VStack>

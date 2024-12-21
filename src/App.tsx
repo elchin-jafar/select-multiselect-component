@@ -33,7 +33,7 @@ function App() {
         // height={70}
         // size='xxl'
       />
-      <MultiSelect options={options} />
+      <MultiSelect options={options} disableSearch />
     </Flex>
   );
 }
