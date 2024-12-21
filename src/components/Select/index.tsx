@@ -118,7 +118,6 @@ const Select: FC<SelectProp> = ({
         overflowY='scroll'
         width={width}
         shadow='lg'
-        outline={"none"}
         {...listProps}
         {...placementStyles[placement]}
       >

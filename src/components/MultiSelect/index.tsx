@@ -8,6 +8,12 @@ const MultiSelect: FC<MultiSelectProps> = ({
   options,
   disableSearch = false,
   hideSelected = true,
+  colorScheme = "gray",
+  width = 300,
+  borderRadius = 5,
+  popoverProps = {},
+  listProps = {},
+  listItemProps = {},
 }) => {
   const [inputValue, setInputValue] = useState("");
   const [selectedItems, setSelectedItems] = useState<Option[]>([]);
@@ -108,9 +114,8 @@ const MultiSelect: FC<MultiSelectProps> = ({
           break;
 
         case useCombobox.stateChangeTypes.InputChange:
-          if (!newInputValue) break;
           if (!disableSearch) {
-            setInputValue(newInputValue);
+            setInputValue(newInputValue!);
           }
           break;
         default:
@@ -131,19 +136,23 @@ const MultiSelect: FC<MultiSelectProps> = ({
         </Text>
         <Group
           display='flex'
-          border='1px solid red'
+          border={`1px solid ${colorScheme}`}
+          borderRadius={borderRadius}
           position='relative'
           p={2}
-          width={400}
+          width={width}
           {...getToggleButtonProps()}
         >
-          <Flex wrap='wrap' position='relative' gap={2}>
+          <Flex wrap='wrap' position='relative' gapX={2} gapY={0}>
             {selectedItems.map((option, index) => (
               <Tag.Root
                 key={option.label}
+                backgroundColor='gray.100'
                 {...getSelectedItemProps({ selectedItem: option, index })}
               >
-                <Tag.Label>{option.label}</Tag.Label>
+                <Tag.Label fontSize={15} p='3px'>
+                  {option.label}
+                </Tag.Label>
                 <Tag.EndElement
                   cursor='pointer'
                   onClick={(e) => {
@@ -155,37 +164,58 @@ const MultiSelect: FC<MultiSelectProps> = ({
                 </Tag.EndElement>
               </Tag.Root>
             ))}
-            {!disableSearch && (
-              <Input
-                ref={inputRef}
-                border='none'
-                outline='none'
-                pointerEvents='none'
-                {...getInputProps(getDropdownProps({ preventKeyAction: isOpen }))}
-              />
-            )}
+
+            <Input
+              disabled={disableSearch}
+              ref={inputRef}
+              border='none'
+              outline='none'
+              pointerEvents='none'
+              borderColor={`${colorScheme}.500`}
+              fontSize={15}
+              {...getInputProps(getDropdownProps({ preventKeyAction: isOpen }))}
+            />
           </Flex>
         </Group>
       </VStack>
-
-      <List.Root position='absolute' maxHeight={240} overflowY='scroll' {...getMenuProps()}>
-        {isOpen
-          ? items.map((item, index) => {
-              const isSelected = selectedItems.some((selected) => selected.value === item.value);
-              return (
-                <List.Item
-                  {...getItemProps({ item, index })}
-                  key={item.value}
-                  bgColor={
-                    isSelected ? "blue" : highlightedIndex === index ? "lightblue" : undefined
-                  }
-                >
-                  {item.label}
-                </List.Item>
-              );
-            })
-          : null}
-      </List.Root>
+      <Box {...popoverProps}>
+        <List.Root
+          position='absolute'
+          overflowY='scroll'
+          minWidth={170}
+          maxHeight={240}
+          width={width}
+          shadow='lg'
+          {...listProps}
+          {...getMenuProps()}
+        >
+          {isOpen
+            ? items.map((item, index) => {
+                const isSelected = selectedItems.some((selected) => selected.value === item.value);
+                return (
+                  <List.Item
+                    {...getItemProps({ item, index })}
+                    key={item.value}
+                    listStyle='none'
+                    px={4}
+                    py={2}
+                    transition='background 0.4s'
+                    bgColor={
+                      isSelected
+                        ? `${colorScheme}.300`
+                        : highlightedIndex === index
+                          ? `${colorScheme}.100`
+                          : undefined
+                    }
+                    {...listItemProps}
+                  >
+                    {item.label}
+                  </List.Item>
+                );
+              })
+            : null}
+        </List.Root>
+      </Box>
     </Box>
   );
 };

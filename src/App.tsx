@@ -33,7 +33,7 @@ function App() {
         // height={70}
         // size='xxl'
       />
-      <MultiSelect options={options} hideSelected={false} />
+      <MultiSelect options={options} hideSelected={false} colorScheme='purple' />
     </Flex>
   );
 }
