@@ -2,7 +2,7 @@ import CloseIcon from "@/assets/close.svg";
 import { Box, Flex, Group, Image, Input, List, Tag, Text, VStack } from "@chakra-ui/react";
 import { useCombobox, useMultipleSelection } from "downshift";
 import { FC, useCallback, useMemo, useRef, useState } from "react";
-import { MultiSelectProps } from "./types";
+import { MultiSelectProps, Option } from "./types";
 
 const MultiSelect: FC<MultiSelectProps> = ({
   options,
@@ -10,14 +10,14 @@ const MultiSelect: FC<MultiSelectProps> = ({
   hideSelected = true,
 }) => {
   const [inputValue, setInputValue] = useState("");
-  const [selectedItems, setSelectedItems] = useState([]);
+  const [selectedItems, setSelectedItems] = useState<Option[]>([]);
   const inputRef = useRef<HTMLInputElement | null>(null);
-  function itemToString(item: any | null) {
+  function itemToString(item: Option | null) {
     return item ? item.label : "";
   }
 
   const getFilteredOptions = useCallback(
-    (selectedItems, inputValue) => {
+    (selectedItems: Option[], inputValue: Option["value"]) => {
       const lowerCasedInputValue = inputValue.toLowerCase();
 
       return options.filter((option) => {
@@ -42,21 +42,23 @@ const MultiSelect: FC<MultiSelectProps> = ({
     [selectedItems, inputValue, getFilteredOptions],
   );
 
-  const { getSelectedItemProps, getDropdownProps, removeSelectedItem } = useMultipleSelection({
-    selectedItems,
-    onStateChange({ selectedItems: newSelectedItems, type }) {
-      switch (type) {
-        case useMultipleSelection.stateChangeTypes.SelectedItemKeyDownBackspace:
-        case useMultipleSelection.stateChangeTypes.SelectedItemKeyDownDelete:
-        case useMultipleSelection.stateChangeTypes.DropdownKeyDownBackspace:
-        case useMultipleSelection.stateChangeTypes.FunctionRemoveSelectedItem:
-          setSelectedItems(newSelectedItems);
-          break;
-        default:
-          break;
-      }
-    },
-  });
+  const { getSelectedItemProps, getDropdownProps, removeSelectedItem } =
+    useMultipleSelection<Option>({
+      selectedItems,
+      onStateChange({ selectedItems: newSelectedItems, type }) {
+        switch (type) {
+          case useMultipleSelection.stateChangeTypes.SelectedItemKeyDownBackspace:
+          case useMultipleSelection.stateChangeTypes.SelectedItemKeyDownDelete:
+          case useMultipleSelection.stateChangeTypes.DropdownKeyDownBackspace:
+          case useMultipleSelection.stateChangeTypes.FunctionRemoveSelectedItem:
+            if (!newSelectedItems) break;
+            setSelectedItems(newSelectedItems);
+            break;
+          default:
+            break;
+        }
+      },
+    });
 
   const {
     isOpen,
@@ -93,12 +95,12 @@ const MultiSelect: FC<MultiSelectProps> = ({
         case useCombobox.stateChangeTypes.ItemClick:
         case useCombobox.stateChangeTypes.InputBlur:
           if (newSelectedItem) {
-            const isItemSelected = (option) => {
+            const isItemSelected = (option: Option) => {
               return selectedItems.some((selected) => selected.value === option.value);
             };
-            setSelectedItems((prev: any) =>
+            setSelectedItems((prev) =>
               isItemSelected(newSelectedItem)
-                ? prev.filter((option: any) => option.value !== newSelectedItem.value)
+                ? prev.filter((option) => option.value !== newSelectedItem.value)
                 : [...prev, newSelectedItem],
             );
             setInputValue("");
@@ -106,6 +108,7 @@ const MultiSelect: FC<MultiSelectProps> = ({
           break;
 
         case useCombobox.stateChangeTypes.InputChange:
+          if (!newInputValue) break;
           if (!disableSearch) {
             setInputValue(newInputValue);
           }
