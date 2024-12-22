@@ -18,8 +18,37 @@ const handleDisable = (option: Option) => option.isDisabled!;
 
 function App() {
   return (
-    <Flex justifyContent='space-around' position='relative' top='320px'>
-      <h1>Hello World</h1>
+    // <Flex justifyContent='space-around' position='relative' top='320px'>
+    //   <h1>Hello World</h1>
+    //   <Select
+    //     options={options}
+    //     colorScheme='blue'
+    //     // hideSelected
+    //     // closeOnSelect={false}
+    //     // placement='bottom'
+    //     disableOption={handleDisable}
+    //     popoverProps={{ cursor: "pointer" }}
+    //     // listProps={{ background: "red" }}
+    //     // listItemProps={{ background: "yellow" }}
+    //     // getLabel={(option) => `updated ${option.label}`}
+    //     // height={70}
+    //     // size='xxl'
+    //   />
+    //   <MultiSelect
+    //     options={options}
+    //     hideSelected={false}
+    //     colorScheme='purple'
+    //     inputWidth='500px'
+    //     // inputHeight='300px'
+    //     // inputBorderRadius='10px'
+    //     // tagBorderRadius='50px'
+    //     // tagHeight={20}
+    //     // tagWidth={100}
+    //     size='lg'
+    //     // size='sm'
+    //   />
+    // </Flex>
+    <div style={{ height: "100vh", display: "grid", placeItems: "center" }}>
       <Select
         options={options}
         colorScheme='blue'
@@ -30,24 +59,11 @@ function App() {
         popoverProps={{ cursor: "pointer" }}
         // listProps={{ background: "red" }}
         // listItemProps={{ background: "yellow" }}
-        getLabel={(option) => `updated ${option.label}`}
+        // getLabel={(option) => `updated ${option.label}`}
         // height={70}
         // size='xxl'
       />
-      <MultiSelect
-        options={options}
-        hideSelected={false}
-        colorScheme='purple'
-        inputWidth='500px'
-        // inputHeight='300px'
-        // inputBorderRadius='10px'
-        // tagBorderRadius='50px'
-        // tagHeight={20}
-        // tagWidth={100}
-        size='lg'
-        // size='sm'
-      />
-    </Flex>
+    </div>
   );
 }
 
