@@ -94,6 +94,7 @@ const Select: FC<SelectProp> = ({
             transform={isOpen ? "rotate(180deg)" : undefined}
             transition='transform 0.2s'
             src={ChevronDownIcon}
+            alt='dropdown icon'
             {...getToggleButtonProps()}
           />
         }

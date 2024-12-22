@@ -157,14 +157,7 @@ const MultiSelect: FC<MultiSelectProps> = ({
           height={inputHeightProp}
           {...getToggleButtonProps()}
         >
-          <Flex
-            wrap='wrap'
-            // border='1px solid red'
-            position='relative'
-            gapX={2}
-            gapY='3px'
-            flexGrow={1}
-          >
+          <Flex wrap='wrap' position='relative' gapX={2} gapY='3px' flexGrow={1}>
             {selectedItems.map((option, index) => (
               <Tag.Root
                 key={getValue(option)}
@@ -185,7 +178,7 @@ const MultiSelect: FC<MultiSelectProps> = ({
                     removeSelectedItem(option);
                   }}
                 >
-                  <Image src={CloseIcon} />
+                  <Image src={CloseIcon} alt='close icon' />
                 </Tag.EndElement>
               </Tag.Root>
             ))}
@@ -206,6 +199,7 @@ const MultiSelect: FC<MultiSelectProps> = ({
               transform={isOpen ? "rotate(180deg)" : undefined}
               transition='transform 0.2s'
               src={ChevronDownIcon}
+              alt='dropdown icon'
             />
           </Box>
         </Group>
