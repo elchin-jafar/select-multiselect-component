@@ -1,6 +1,14 @@
 import { BoxProps, ListItemProps, ListRootProps } from "@chakra-ui/react";
 import { CSSProperties } from "react";
 
+export type Sizes = "sm" | "md" | "lg";
+
+export type SizeConfigValues = {
+  fontSize: CSSProperties["fontSize"];
+  inputPadding: CSSProperties["padding"];
+  tagPadding: CSSProperties["padding"];
+};
+
 export interface Option {
   label: string;
   value: string;
@@ -23,4 +31,5 @@ export interface MultiSelectProps {
   listItemProps?: ListItemProps;
   getLabel?: (option: Option) => string;
   getValue?: (option: Option) => string;
+  size?: Sizes;
 }

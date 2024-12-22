@@ -43,6 +43,8 @@ function App() {
         // tagBorderRadius='50px'
         // tagHeight={20}
         // tagWidth={100}
+        size='lg'
+        // size='sm'
       />
     </Flex>
   );

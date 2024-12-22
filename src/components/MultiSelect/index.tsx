@@ -4,6 +4,7 @@ import { Box, Flex, Group, Image, Input, List, Tag, Text, VStack } from "@chakra
 import { useCombobox, useMultipleSelection } from "downshift";
 import { FC, useCallback, useMemo, useRef, useState } from "react";
 import { MultiSelectProps, Option } from "./types";
+import { sizeConfig } from "./constants";
 
 const MultiSelect: FC<MultiSelectProps> = ({
   options,
@@ -11,20 +12,23 @@ const MultiSelect: FC<MultiSelectProps> = ({
   hideSelected = true,
   colorScheme = "gray",
   inputWidth = 300,
-  inputHeight,
+  inputHeight: inputHeightProp,
   inputBorderRadius = 5,
   tagWidth,
-  tagHeight,
+  tagHeight: tagHeightProp,
   tagBorderRadius,
   popoverProps = {},
   listProps = {},
   listItemProps = {},
+  size = "md",
   getLabel = (option: Option) => option.label,
   getValue = (option: Option) => option.value,
 }) => {
   const [inputValue, setInputValue] = useState("");
   const [selectedItems, setSelectedItems] = useState<Option[]>([]);
   const inputRef = useRef<HTMLInputElement | null>(null);
+
+  const { fontSize, inputPadding, tagPadding } = sizeConfig[size];
   function itemToString(item: Option | null) {
     return item ? getLabel(item) : "";
   }
@@ -148,9 +152,9 @@ const MultiSelect: FC<MultiSelectProps> = ({
           border={`1px solid ${colorScheme}`}
           borderRadius={inputBorderRadius}
           position='relative'
-          p={2}
+          p={inputPadding}
           width={inputWidth}
-          height={inputHeight}
+          height={inputHeightProp}
           {...getToggleButtonProps()}
         >
           <Flex
@@ -167,11 +171,11 @@ const MultiSelect: FC<MultiSelectProps> = ({
                 backgroundColor='gray.100'
                 display='flex'
                 width={tagWidth}
-                height={tagHeight}
+                height={tagHeightProp}
                 borderRadius={tagBorderRadius}
                 {...getSelectedItemProps({ selectedItem: option, index })}
               >
-                <Tag.Label fontSize={15} p='3px'>
+                <Tag.Label fontSize={fontSize} p={tagPadding}>
                   {getLabel(option)}
                 </Tag.Label>
                 <Tag.EndElement
@@ -193,7 +197,7 @@ const MultiSelect: FC<MultiSelectProps> = ({
               outline='none'
               pointerEvents='none'
               borderColor={`${colorScheme}.500`}
-              fontSize={15}
+              fontSize={fontSize}
               {...getInputProps(getDropdownProps({ preventKeyAction: isOpen }))}
             />
           </Flex>
@@ -232,6 +236,7 @@ const MultiSelect: FC<MultiSelectProps> = ({
                     py={2}
                     cursor='pointer'
                     transition='background 0.4s'
+                    fontSize={fontSize}
                     bgColor={
                       isSelected
                         ? `${colorScheme}.300`
