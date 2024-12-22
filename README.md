@@ -219,7 +219,7 @@ interface SelectProp {
 
 A feature-rich, accessible, and customizable multi-select component for React applications. Built with Chakra UI and Downshift, this component allows users to select multiple options with search functionality, keyboard navigation, and customizable styling.
 
-![Select Component Demo](https://github.com/elchin-jafar/select-multiselect-component/commit/3c752cc9ef834e44cb0ffbc471d6e28d239835a2)
+![Select Component Demo](https://github.com/elchin-jafar/select-multiselect-component/blob/master/multi.gif)
 
 ## Features
 
