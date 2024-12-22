@@ -28,6 +28,22 @@ describe("Select Component", () => {
     expect(label).toBeVisible();
   });
 
+  it("selects an option on click", async () => {
+    const input = screen.getByRole("combobox");
+    await userEvent.click(input);
+    await userEvent.click(screen.getByText("Option 2"));
+    expect(input).toHaveValue("Option 2");
+  });
+
+  it("selects an option using keyboard", async () => {
+    const input = screen.getByRole("combobox");
+    await userEvent.click(input);
+    await userEvent.keyboard("{ArrowDown}");
+    await userEvent.keyboard("{Enter}");
+
+    expect(input).toHaveValue("Option 1");
+  });
+
   it("filters options based on input", async () => {
     const input = screen.getByRole("combobox");
     await userEvent.type(input, "Option 3");
