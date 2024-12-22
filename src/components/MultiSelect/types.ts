@@ -12,8 +12,12 @@ export interface MultiSelectProps {
   disableSearch?: boolean;
   hideSelected?: boolean;
   colorScheme?: CSSProperties["color"];
-  width?: CSSProperties["width"];
-  borderRadius?: CSSProperties["borderRadius"];
+  inputWidth?: CSSProperties["width"];
+  inputHeight?: CSSProperties["height"];
+  inputBorderRadius?: CSSProperties["borderRadius"];
+  tagWidth?: CSSProperties["width"];
+  tagHeight?: CSSProperties["height"];
+  tagBorderRadius?: CSSProperties["borderRadius"];
   popoverProps?: BoxProps;
   listProps?: ListRootProps;
   listItemProps?: ListItemProps;

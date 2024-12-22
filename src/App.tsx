@@ -33,7 +33,17 @@ function App() {
         // height={70}
         // size='xxl'
       />
-      <MultiSelect options={options} hideSelected={false} colorScheme='purple' />
+      <MultiSelect
+        options={options}
+        hideSelected={false}
+        colorScheme='purple'
+        inputWidth='500px'
+        // inputHeight='300px'
+        // inputBorderRadius='10px'
+        // tagBorderRadius='50px'
+        // tagHeight={20}
+        // tagWidth={100}
+      />
     </Flex>
   );
 }

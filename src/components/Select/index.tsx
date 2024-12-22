@@ -118,6 +118,7 @@ const Select: FC<SelectProp> = ({
         overflowY='scroll'
         width={width}
         shadow='lg'
+        gap='1px'
         {...listProps}
         {...placementStyles[placement]}
       >
@@ -128,7 +129,7 @@ const Select: FC<SelectProp> = ({
                 <Box
                   key={getValue(item)}
                   {...popoverProps}
-                  style={{ cursor: `${isDisabled ? "not-allowed" : "pointer"}` }}
+                  cursor={`${isDisabled ? "not-allowed" : "pointer"}`}
                 >
                   <List.Item
                     {...getItemProps({ item, index })}

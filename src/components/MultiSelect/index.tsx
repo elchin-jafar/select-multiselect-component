@@ -1,4 +1,5 @@
 import CloseIcon from "@/assets/close.svg";
+import ChevronDownIcon from "@/assets/chevron-down.svg";
 import { Box, Flex, Group, Image, Input, List, Tag, Text, VStack } from "@chakra-ui/react";
 import { useCombobox, useMultipleSelection } from "downshift";
 import { FC, useCallback, useMemo, useRef, useState } from "react";
@@ -9,8 +10,12 @@ const MultiSelect: FC<MultiSelectProps> = ({
   disableSearch = false,
   hideSelected = true,
   colorScheme = "gray",
-  width = 300,
-  borderRadius = 5,
+  inputWidth = 300,
+  inputHeight,
+  inputBorderRadius = 5,
+  tagWidth,
+  tagHeight,
+  tagBorderRadius,
   popoverProps = {},
   listProps = {},
   listItemProps = {},
@@ -141,17 +146,29 @@ const MultiSelect: FC<MultiSelectProps> = ({
         <Group
           display='flex'
           border={`1px solid ${colorScheme}`}
-          borderRadius={borderRadius}
+          borderRadius={inputBorderRadius}
           position='relative'
           p={2}
-          width={width}
+          width={inputWidth}
+          height={inputHeight}
           {...getToggleButtonProps()}
         >
-          <Flex wrap='wrap' position='relative' gapX={2} gapY={0}>
+          <Flex
+            wrap='wrap'
+            // border='1px solid red'
+            position='relative'
+            gapX={2}
+            gapY='3px'
+            flexGrow={1}
+          >
             {selectedItems.map((option, index) => (
               <Tag.Root
                 key={getValue(option)}
                 backgroundColor='gray.100'
+                display='flex'
+                width={tagWidth}
+                height={tagHeight}
+                borderRadius={tagBorderRadius}
                 {...getSelectedItemProps({ selectedItem: option, index })}
               >
                 <Tag.Label fontSize={15} p='3px'>
@@ -180,6 +197,13 @@ const MultiSelect: FC<MultiSelectProps> = ({
               {...getInputProps(getDropdownProps({ preventKeyAction: isOpen }))}
             />
           </Flex>
+          <Box minWidth='10%' display='flex' justifyContent='end'>
+            <Image
+              transform={isOpen ? "rotate(180deg)" : undefined}
+              transition='transform 0.2s'
+              src={ChevronDownIcon}
+            />
+          </Box>
         </Group>
       </VStack>
       <Box {...popoverProps}>
@@ -188,8 +212,9 @@ const MultiSelect: FC<MultiSelectProps> = ({
           overflowY='scroll'
           minWidth={170}
           maxHeight={240}
-          width={width}
+          width={inputWidth}
           shadow='lg'
+          gap='1px'
           {...listProps}
           {...getMenuProps()}
         >
@@ -205,6 +230,7 @@ const MultiSelect: FC<MultiSelectProps> = ({
                     listStyle='none'
                     px={4}
                     py={2}
+                    cursor='pointer'
                     transition='background 0.4s'
                     bgColor={
                       isSelected
