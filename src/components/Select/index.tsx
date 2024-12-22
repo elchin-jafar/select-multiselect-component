@@ -36,7 +36,7 @@ const Select: FC<SelectProp> = ({
     const lowerCased = inputValue.toLowerCase();
 
     return function itemsFilter(item: Option) {
-      const matchesInput = !inputValue || getValue(item).toLowerCase().includes(lowerCased);
+      const matchesInput = !inputValue || getLabel(item).toLowerCase().includes(lowerCased);
       const isHidden = hideSelected && selectedItem && getValue(item) === selectedItem.value;
       return matchesInput && !isHidden;
     };
