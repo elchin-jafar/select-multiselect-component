@@ -1,4 +1,4 @@
-import { Box, Flex, InputProps } from "@chakra-ui/react";
+import { Box, InputProps } from "@chakra-ui/react";
 import { ReactNode } from "react";
 
 interface InputGroupProps extends InputProps {
@@ -8,9 +8,9 @@ interface InputGroupProps extends InputProps {
   flex?: string;
 }
 
-const InputGroup = ({ startElement, endElement, children, flex, ...rest }: InputGroupProps) => {
+const InputGroup = ({ startElement, endElement, children, ...rest }: InputGroupProps) => {
   return (
-    <Flex align='center' minWidth={170} flex={flex} position='relative' {...rest}>
+    <Box display='flex' alignItems='center' minWidth={170} position='relative' {...rest}>
       {startElement && (
         <Box
           position='absolute'
@@ -38,7 +38,7 @@ const InputGroup = ({ startElement, endElement, children, flex, ...rest }: Input
           {endElement}
         </Box>
       )}
-    </Flex>
+    </Box>
   );
 };
 
