@@ -287,7 +287,12 @@ Selected items disappear from dropdown by default. Use **hideSelected** to make 
 ### Custom Tag Styling
 
 ```tsx
-<MultiSelect options={options} hideSelected={false} />
+<MultiSelect
+    options={options}
+    tagWidth='7rem'
+    tagHeight={20}
+    tagBorderRadius={20}
+/>
 ```
 
 ### Custom List Styling
@@ -372,3 +377,4 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## License
 
 MIT © [Elchin Jafar](https://github.com/elchin-jafar)
+
